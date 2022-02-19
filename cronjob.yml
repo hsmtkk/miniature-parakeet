@@ -1,0 +1,20 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: miniature-parakeet
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: busybox
+              image: busybox:latest
+              command:
+                - wget
+                - -O
+                - "-"
+                - http://miniature-parakeet:8000
+          restartPolicy: OnFailure

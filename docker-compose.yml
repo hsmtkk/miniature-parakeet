@@ -1,0 +1,7 @@
+---
+version: "3.8"
+services:
+  web:
+    image: hsmtkk/miniature-parakeet:latest
+    ports:
+      - 8000:8000
