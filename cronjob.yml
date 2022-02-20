@@ -16,5 +16,5 @@ spec:
                 - wget
                 - -O
                 - "-"
-                - http://miniature-parakeet:8000
+                - http://miniature-parakeet-count:8000
           restartPolicy: OnFailure

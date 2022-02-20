@@ -4,3 +4,7 @@ resources:
   - deployment.yml
   - ingress.yml
   - service.yml
+configMapGenerator:
+  - name: miniature-parakeet-prometheus
+    files:
+      - prometheus/prometheus.yml

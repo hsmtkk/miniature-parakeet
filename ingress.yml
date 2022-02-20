@@ -11,6 +11,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: miniature-parakeet
+                name: miniature-parakeet-prometheus
                 port:
-                  number: 80
+                  number: 9090

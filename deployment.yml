@@ -2,24 +2,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: miniature-parakeet
+  name: miniature-parakeet-count
   labels:
-    app: miniature-parakeet
+    app: miniature-parakeet-count
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: miniature-parakeet
+      app: miniature-parakeet-count
   template:
     metadata:
       labels:
-        app: miniature-parakeet
+        app: miniature-parakeet-count
     spec:
       containers:
         - name: web
           image: hsmtkk/miniature-parakeet:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
+            - containerPort: 9000
           startupProbe:
             httpGet:
               path: /
@@ -32,3 +34,70 @@ spec:
             httpGet:
               path: /
               port: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: miniature-parakeet-prometheus
+  labels:
+    app: miniature-parakeet-prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: miniature-parakeet-prometheus
+  template:
+    metadata:
+      labels:
+        app: miniature-parakeet-prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9090
+          startupProbe:
+            httpGet:
+              path: /metrics
+              port: 9090
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 9090
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 9090
+          volumeMounts:
+            - name: config
+              mountPath: /etc/prometheus
+      volumes:
+        - name: config
+          configMap:
+            name: miniature-parakeet-prometheus
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: miniature-parakeet-debug
+  labels:
+    app: miniature-parakeet-debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: miniature-parakeet-debug
+  template:
+    metadata:
+      labels:
+        app: miniature-parakeet-debug
+    spec:
+      containers:
+        - name: busybox
+          image: busybox:latest
+          imagePullPolicy: Always
+          command:
+            - tail
+            - -f
+            - /dev/null
